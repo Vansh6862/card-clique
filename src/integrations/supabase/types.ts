@@ -14,6 +14,229 @@ export type Database = {
   }
   public: {
     Tables: {
+      game_actions: {
+        Row: {
+          action: string
+          amount: number
+          created_at: string
+          id: string
+          is_blind_action: boolean
+          round_id: string
+          user_id: string
+        }
+        Insert: {
+          action: string
+          amount?: number
+          created_at?: string
+          id?: string
+          is_blind_action?: boolean
+          round_id: string
+          user_id: string
+        }
+        Update: {
+          action?: string
+          amount?: number
+          created_at?: string
+          id?: string
+          is_blind_action?: boolean
+          round_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_actions_round_id_fkey"
+            columns: ["round_id"]
+            isOneToOne: false
+            referencedRelation: "game_rounds"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      game_hand_cards: {
+        Row: {
+          cards: Json
+          created_at: string
+          id: string
+          revealed: boolean
+          round_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cards: Json
+          created_at?: string
+          id?: string
+          revealed?: boolean
+          round_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cards?: Json
+          created_at?: string
+          id?: string
+          revealed?: boolean
+          round_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_hand_cards_round_id_fkey"
+            columns: ["round_id"]
+            isOneToOne: false
+            referencedRelation: "game_rounds"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      game_hands: {
+        Row: {
+          action_at: string | null
+          created_at: string
+          current_bet: number
+          id: string
+          is_blind: boolean
+          is_folded: boolean
+          is_seen: boolean
+          last_action: string | null
+          round_id: string
+          seat: number | null
+          total_bet: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          action_at?: string | null
+          created_at?: string
+          current_bet?: number
+          id?: string
+          is_blind?: boolean
+          is_folded?: boolean
+          is_seen?: boolean
+          last_action?: string | null
+          round_id: string
+          seat?: number | null
+          total_bet?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          action_at?: string | null
+          created_at?: string
+          current_bet?: number
+          id?: string
+          is_blind?: boolean
+          is_folded?: boolean
+          is_seen?: boolean
+          last_action?: string | null
+          round_id?: string
+          seat?: number | null
+          total_bet?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_hands_round_id_fkey"
+            columns: ["round_id"]
+            isOneToOne: false
+            referencedRelation: "game_rounds"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      game_rounds: {
+        Row: {
+          boot_amount: number
+          created_at: string
+          current_turn_user_id: string | null
+          dealer_seat: number | null
+          finished_at: string | null
+          id: string
+          pot: number
+          room_id: string
+          round_number: number
+          started_at: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          boot_amount?: number
+          created_at?: string
+          current_turn_user_id?: string | null
+          dealer_seat?: number | null
+          finished_at?: string | null
+          id?: string
+          pot?: number
+          room_id: string
+          round_number?: number
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          boot_amount?: number
+          created_at?: string
+          current_turn_user_id?: string | null
+          dealer_seat?: number | null
+          finished_at?: string | null
+          id?: string
+          pot?: number
+          room_id?: string
+          round_number?: number
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_rounds_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      game_winners: {
+        Row: {
+          amount: number
+          cards: Json | null
+          created_at: string
+          hand_rank: string | null
+          id: string
+          round_id: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          cards?: Json | null
+          created_at?: string
+          hand_rank?: string | null
+          id?: string
+          round_id: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          cards?: Json | null
+          created_at?: string
+          hand_rank?: string | null
+          id?: string
+          round_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_winners_round_id_fkey"
+            columns: ["round_id"]
+            isOneToOne: false
+            referencedRelation: "game_rounds"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -106,6 +329,87 @@ export type Database = {
           max_players?: number
           name?: string
           status?: string
+        }
+        Relationships: []
+      }
+      transactions: {
+        Row: {
+          amount: number
+          balance_after: number
+          created_at: string
+          id: string
+          note: string | null
+          room_id: string | null
+          round_id: string | null
+          type: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          balance_after: number
+          created_at?: string
+          id?: string
+          note?: string | null
+          room_id?: string | null
+          round_id?: string | null
+          type: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          balance_after?: number
+          created_at?: string
+          id?: string
+          note?: string | null
+          room_id?: string | null
+          round_id?: string | null
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_round_id_fkey"
+            columns: ["round_id"]
+            isOneToOne: false
+            referencedRelation: "game_rounds"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wallets: {
+        Row: {
+          balance: number
+          created_at: string
+          total_deposited: number
+          total_wagered: number
+          total_won: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          balance?: number
+          created_at?: string
+          total_deposited?: number
+          total_wagered?: number
+          total_won?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          balance?: number
+          created_at?: string
+          total_deposited?: number
+          total_wagered?: number
+          total_won?: number
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
