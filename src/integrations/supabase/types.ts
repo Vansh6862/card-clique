@@ -14,7 +14,101 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          id: string
+          username: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          id: string
+          username: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          id?: string
+          username?: string
+        }
+        Relationships: []
+      }
+      room_players: {
+        Row: {
+          chips: number
+          id: string
+          is_ready: boolean
+          joined_at: string
+          room_id: string
+          seat: number | null
+          user_id: string
+        }
+        Insert: {
+          chips?: number
+          id?: string
+          is_ready?: boolean
+          joined_at?: string
+          room_id: string
+          seat?: number | null
+          user_id: string
+        }
+        Update: {
+          chips?: number
+          id?: string
+          is_ready?: boolean
+          joined_at?: string
+          room_id?: string
+          seat?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "room_players_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rooms: {
+        Row: {
+          boot_amount: number
+          code: string
+          created_at: string
+          host_id: string
+          id: string
+          is_private: boolean
+          max_players: number
+          name: string
+          status: string
+        }
+        Insert: {
+          boot_amount?: number
+          code: string
+          created_at?: string
+          host_id: string
+          id?: string
+          is_private?: boolean
+          max_players?: number
+          name: string
+          status?: string
+        }
+        Update: {
+          boot_amount?: number
+          code?: string
+          created_at?: string
+          host_id?: string
+          id?: string
+          is_private?: boolean
+          max_players?: number
+          name?: string
+          status?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
