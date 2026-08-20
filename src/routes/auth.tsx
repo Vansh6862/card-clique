@@ -12,12 +12,10 @@ import { useSession } from "@/hooks/use-session";
 type AuthSearch = { redirect?: string };
 
 export const Route = createFileRoute("/auth")({
-  validateSearch: (search: Record<string, unknown>): AuthSearch => ({
-    redirect:
-      typeof search['redirect'] === "string" && search['redirect'].startsWith("/")
-        ? search['redirect']
-        : undefined,
-  }),
+  validateSearch: (search: Record<string, unknown>): AuthSearch => {
+    const raw = search['redirect'];
+    return typeof raw === "string" && raw.startsWith("/") ? { redirect: raw } : {};
+  },
   head: () => ({
     meta: [
       { title: "Sign in — 3 Patti" },
