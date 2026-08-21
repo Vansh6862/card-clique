@@ -123,6 +123,7 @@ export async function advanceTurn(round: Round, seats: Seat[]) {
   if (!seats.length) return;
   const index = seats.findIndex((s) => s.user_id === round.current_turn_user_id);
   const next = seats[(index + 1) % seats.length];
+  if (!next) return;
   const { error } = await supabase
     .from("game_rounds")
     .update({ current_turn_user_id: next.user_id })
