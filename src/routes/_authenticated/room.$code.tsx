@@ -231,7 +231,12 @@ function RoomLobby() {
       </div>
 
       <div className="mt-8 flex flex-wrap items-center gap-3">
-        <Button disabled>Start game (coming soon)</Button>
+        {isHost ? (
+          <Button onClick={startGame}>Start game</Button>
+        ) : (
+          <Button disabled>Waiting for host to start</Button>
+        )}
+
         <Button variant="outline" onClick={leave}>
           Leave table
         </Button>
