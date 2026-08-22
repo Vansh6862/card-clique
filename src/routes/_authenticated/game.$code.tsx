@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Crown, Eye, Hand, TrendingUp, Trophy } from "lucide-react";
@@ -71,7 +71,6 @@ function initials(name: string) {
 function GameTable() {
   const { code } = Route.useParams();
   const { user } = Route.useRouteContext();
-  const navigate = useNavigate();
 
   const [room, setRoom] = useState<Room | null>(null);
   const [players, setPlayers] = useState<Player[]>([]);
@@ -459,8 +458,6 @@ function GameTable() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      {navigate ? null : null}
     </div>
   );
 }
