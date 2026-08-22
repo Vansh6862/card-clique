@@ -96,12 +96,70 @@ function RoomLobby() {
     };
   }, [code]);
 
+  // Everyone in the room follows the host into the game table.
+  useEffect(() => {
+    if (!room) return;
+    if (room.status === "playing") {
+      navigate({ to: "/game/$code", params: { code: room.code } });
+      return;
+    }
+    const channel = supabase
+      .channel(`room-status-${room.id}`)
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "rooms", filter: `id=eq.${room.id}` },
+        (payload) => {
+          if ((payload.new as { status: string }).status === "playing") {
+            navigate({ to: "/game/$code", params: { code: room.code } });
+          }
+        },
+      )
+      .subscribe();
+    return () => {
+      void supabase.removeChannel(channel);
+    };
+  }, [room, navigate]);
+
+  const isHost = !!room && room.host_id === user.id;
+
+  async function startGame() {
+    if (!room) return;
+    const { data: existing } = await supabase
+      .from("game_rounds")
+      .select("id")
+      .eq("room_id", room.id)
+      .limit(1);
+    if (!existing?.length) {
+      const { error } = await supabase.from("game_rounds").insert({
+        room_id: room.id,
+        round_number: 1,
+        status: "in_progress",
+        boot_amount: room.boot_amount,
+        started_at: new Date().toISOString(),
+      });
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
+    }
+    const { error: roomError } = await supabase
+      .from("rooms")
+      .update({ status: "playing" })
+      .eq("id", room.id);
+    if (roomError) {
+      toast.error(roomError.message);
+      return;
+    }
+    navigate({ to: "/game/$code", params: { code: room.code } });
+  }
+
   async function leave() {
     if (!room) return;
     await supabase.from("room_players").delete().eq("room_id", room.id).eq("user_id", user.id);
     toast.success("You left the table");
     navigate({ to: "/" });
   }
+
 
   if (loading) {
     return <p className="p-10 text-center text-muted-foreground">Loading table…</p>;
@@ -173,7 +231,12 @@ function RoomLobby() {
       </div>
 
       <div className="mt-8 flex flex-wrap items-center gap-3">
-        <Button disabled>Start game (coming soon)</Button>
+        {isHost ? (
+          <Button onClick={startGame}>Start game</Button>
+        ) : (
+          <Button disabled>Waiting for host to start</Button>
+        )}
+
         <Button variant="outline" onClick={leave}>
           Leave table
         </Button>
